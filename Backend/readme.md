@@ -53,15 +53,70 @@ Occurs when validation fails or required fields are missing.
 }
 ```
 
+---
+
+## Endpoint: `/users/login`
+
+### Description
+This endpoint is used to authenticate an existing user. It validates the input data, checks the email and password, and returns a JSON Web Token (JWT) and the user details upon successful authentication.
+
+### Method
+`POST`
+
+### Request Body
+The request body should be a JSON object with the following structure:
+```json
+{
+  "email": "string (valid email format, required)",
+  "password": "string (min length: 6, required)"
+}
+```
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "token": "string (JWT token)",
+  "user": {
+    "_id": "string",
+    "fullname": {
+      "firstname": "string",
+      "lastname": "string"
+    },
+    "email": "string",
+    "socketId": "string (optional)"
+  }
+}
+```
+
+#### Error (400 Bad Request)
+Occurs when validation fails or required fields are missing.
+```json
+{
+  "errors": [
+    {
+      "msg": "string (error message)",
+      "param": "string (field name)",
+      "location": "string (body)"
+    }
+  ]
+}
+```
+
+#### Error (401 Unauthorized)
+Occurs when the email or password is incorrect.
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
 ### Example Request
 ```bash
-curl -X POST http://localhost:5000/users/register \
+curl -X POST http://localhost:5000/users/login \
 -H "Content-Type: application/json" \
 -d '{
-  "fullname": {
-    "firstname": "John",
-    "lastname": "Doe"
-  },
   "email": "john.doe@example.com",
   "password": "password123"
 }'
@@ -85,5 +140,5 @@ curl -X POST http://localhost:5000/users/register \
 
 ### Notes
 - Ensure the `Content-Type` header is set to `application/json`.
-- The `password` field is hashed before being stored in the database.
+- The `password` field is not stored in plain text but is hashed in the database.
 - The `socketId` field is optional and can be updated later.
