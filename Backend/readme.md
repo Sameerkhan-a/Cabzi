@@ -138,7 +138,74 @@ curl -X POST http://localhost:5000/users/login \
 }
 ```
 
+---
+
+## Endpoint: `/users/profile`
+
+### Description
+This endpoint is used to retrieve the profile of the currently authenticated user. The user must be logged in and provide a valid token.
+
+### Method
+`GET`
+
+### Headers
+- `Authorization`: `Bearer <JWT token>`
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "_id": "string",
+  "fullname": {
+    "firstname": "string",
+    "lastname": "string"
+  },
+  "email": "string",
+  "socketId": "string (optional)"
+}
+```
+
+#### Error (401 Unauthorized)
+Occurs when the token is missing or invalid.
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+---
+
+## Endpoint: `/users/logout`
+
+### Description
+This endpoint is used to log out the currently authenticated user. It clears the authentication token from cookies and blacklists the token.
+
+### Method
+`GET`
+
+### Headers
+- `Authorization`: `Bearer <JWT token>`
+
+### Response
+
+#### Success (200 OK)
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+#### Error (401 Unauthorized)
+Occurs when the token is missing or invalid.
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+---
+
 ### Notes
-- Ensure the `Content-Type` header is set to `application/json`.
-- The `password` field is not stored in plain text but is hashed in the database.
-- The `socketId` field is optional and can be updated later.
+- Ensure the `Authorization` header is set to `Bearer <JWT token>` for protected routes.
+- The `/users/logout` endpoint blacklists the token, making it unusable for future requests.
